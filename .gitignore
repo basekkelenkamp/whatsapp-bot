@@ -1,4 +1,7 @@
-.wwebjs*
-data
-node_modules
-package-lock.json
+node_modules/
+.wwebjs_auth/
+.wwebjs_cache/
+data/
+*.log
+.DS_Store
+.env
