@@ -1,6 +1,6 @@
 ---
 name: WhatsApp Bot
-version: "2.0.0"
+version: "2.1.0"
 slug: whatsapp_bot
 description: >-
   A modular WhatsApp bot (whatsapp-web.js) with a command registry,
@@ -20,6 +20,10 @@ ingress: true
 ingress_port: 8099
 panel_icon: mdi:whatsapp
 panel_title: WhatsApp Bot
+# Read-only access to /share, where the Google service account key is kept. A
+# secret does not belong in the add-on options, where the UI shows it in clear.
+map:
+  - share:ro
 options:
   log_level: info
   command_prefix: "/"
@@ -33,6 +37,13 @@ options:
     default_weeks: 1
     max_weeks: 8
     allow_multiple_answers: true
+  gdrive:
+    enabled: false
+    folder_id: ""
+    chat: ""
+    poll_interval: 300
+    service_account_key_file: /share/whatsapp-bot-drive-key.json
+    service_account_json: ""
 schema:
   log_level: list(trace|debug|info|warn|error)
   command_prefix: str
@@ -47,3 +58,10 @@ schema:
     default_weeks: int(1,52)
     max_weeks: int(1,52)
     allow_multiple_answers: bool
+  gdrive:
+    enabled: bool
+    folder_id: str?
+    chat: str?
+    poll_interval: int(60,86400)
+    service_account_key_file: str?
+    service_account_json: password?

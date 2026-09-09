@@ -1,5 +1,8 @@
 # Adding a command
 
+> Looking for something that runs on a timer rather than in reply to a message?
+> That is a *job* — see [`../jobs/README.md`](../jobs/README.md).
+
 Every `.js` file in this directory — and every subdirectory containing an
 `index.js` — is loaded at startup and registered automatically. There is no
 list to update anywhere else. A file whose name starts with `_` is skipped, so

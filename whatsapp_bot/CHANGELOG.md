@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.1.0
+
+### Added
+- **Google Drive watcher.** Announces new files in a watched folder (and its
+  subfolders) in a WhatsApp group, with uploader, date and a direct link.
+  Authenticates as a Google service account, so nothing expires and there is no
+  login flow to repeat. Off by default; see `DOCS.md`.
+- **Background jobs.** Modules in `src/jobs/` run on a timer the same way
+  `src/commands/` modules react to messages — see `src/jobs/README.md`.
+- `/chatid` reports the current chat's id, and the panel has a **Groups** page
+  listing every group with its id. Options that take a chat also accept a group
+  name, so usually neither is needed.
+- The panel shows each background job's state, last run and last error.
+
 ## 2.0.0
 
 Restructured as a proper Home Assistant add-on repository, and rebuilt around a

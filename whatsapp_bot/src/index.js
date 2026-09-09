@@ -8,6 +8,7 @@ const config = require('./config');
 const { createLogger, setLevel } = require('./logger');
 const { CommandRegistry } = require('./core/registry');
 const { Dispatcher } = require('./core/dispatcher');
+const { JobRunner } = require('./core/jobs');
 const { WhatsAppService } = require('./whatsapp/client');
 const { createHealthServer } = require('./health-server');
 
@@ -19,12 +20,14 @@ const log = createLogger('bot');
 
 let server = null;
 let service = null;
+let jobs = null;
 let shuttingDown = false;
 
 async function shutdown(code = 0) {
     if (shuttingDown) return;
     shuttingDown = true;
     log.info('Shutting down...');
+    jobs?.stop();
     server?.close();
     await service?.stop().catch((err) => log.error(`Shutdown error: ${err.message}`));
     process.exit(code);
@@ -54,10 +57,14 @@ async function main() {
         await shutdown(1);
     });
 
-    server = createHealthServer({ service, registry, port: config.healthPort });
+    jobs = new JobRunner({ config, service });
+    jobs.loadDirectory(path.join(__dirname, 'jobs'));
+
+    server = createHealthServer({ service, registry, jobs, port: config.healthPort });
 
     await dispatcher.initCommands();
     await service.start();
+    jobs.start();
 
     process.on('SIGTERM', () => shutdown(0));
     process.on('SIGINT', () => shutdown(0));

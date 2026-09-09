@@ -8,7 +8,10 @@ responds to slash commands in your chats.
 /plansesh 2     → posts a poll per week for the next 2 weeks
 /help           → lists every command
 /status         → is the bot alive, and for how long
+/chatid         → the current chat's id
 ```
+
+It can also watch a Google Drive folder and announce new files in a group.
 
 ## Install
 
@@ -62,11 +65,12 @@ local add-on and press **Rebuild**.
 Everything is set in the add-on's **Configuration** tab; see
 [`whatsapp_bot/DOCS.md`](whatsapp_bot/DOCS.md) for what each option does.
 
-## Adding a command
+## Adding a feature
 
-Drop one file in `whatsapp_bot/src/commands/` and it is picked up on the next
-start — nothing else to wire up. See
-[`whatsapp_bot/src/commands/README.md`](whatsapp_bot/src/commands/README.md).
+Two kinds of module, both auto-loaded, nothing else to wire up:
+
+- **Commands** react to a message — [`src/commands/README.md`](whatsapp_bot/src/commands/README.md).
+- **Jobs** run on a timer — [`src/jobs/README.md`](whatsapp_bot/src/jobs/README.md).
 
 ## Repository layout
 
