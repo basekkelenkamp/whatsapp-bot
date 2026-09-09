@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.1.1
+
+### Fixed
+- `Failed: r` when sending to a group by name, and `/chatid failed: r`. Both
+  went through whatsapp-web.js's full chat model, which for every group awaits a
+  live GroupMetadata update and rewrites each participant id through WhatsApp's
+  LID migration helper. When any of that throws, the browser-side error arrives
+  minified and useless, and `getChats()` loses every chat at once because it
+  builds all the models in one `Promise.all`.
+  - `/chatid` now reads the id straight off the message — no browser call.
+  - Group listing reads `id` and `name` off the store directly, skipping any
+    chat that misbehaves instead of failing wholesale.
+  - The `allowed_chats` check no longer loads chat models either.
+  - Sending was never affected: it asks for the raw chat, not the model.
+
 ## 2.1.0
 
 ### Added

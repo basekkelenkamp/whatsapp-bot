@@ -1,6 +1,7 @@
 'use strict';
 
 const { createLogger } = require('../logger');
+const { chatIdOf, listGroups } = require('../whatsapp/chats');
 
 const log = createLogger('dispatch');
 
@@ -37,7 +38,7 @@ class Dispatcher {
             log.debug(`Ignoring ${invocation.name} from ${msg.from} (listen_to=${this.config.listen_to})`);
             return;
         }
-        if (!(await this._chatAllowed(msg))) {
+        if (!(await this._chatAllowed(msg, client))) {
             log.debug(`Ignoring ${invocation.name}: chat ${msg.from} is not in allowed_chats`);
             return;
         }
@@ -88,16 +89,22 @@ class Dispatcher {
         return true;
     }
 
-    async _chatAllowed(msg) {
+    async _chatAllowed(msg, client) {
         const allowed = this.config.allowed_chats;
         if (!Array.isArray(allowed) || allowed.length === 0) return true;
-        if (allowed.includes(msg.from)) return true;
+
+        const chatId = chatIdOf(msg);
+        if (allowed.includes(chatId)) return true;
+
+        // Nothing matched by id, so the allowlist may be using group names.
+        // Only groups can be named, so a direct message is already decided.
+        if (!chatId?.endsWith('@g.us')) return false;
 
         try {
-            const chat = await msg.getChat();
-            return allowed.some((entry) => entry === chat.id?._serialized || entry === chat.name);
+            const group = (await listGroups(client)).find((entry) => entry.id === chatId);
+            return group ? allowed.includes(group.name) : false;
         } catch (err) {
-            log.warn(`Could not resolve chat ${msg.from}: ${err.message}`);
+            log.warn(`Could not check ${chatId} against allowed_chats: ${err.message}`);
             return false;
         }
     }

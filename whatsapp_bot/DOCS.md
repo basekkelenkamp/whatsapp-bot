@@ -182,3 +182,13 @@ stored pairing and shows a fresh QR code.
 **Commands do nothing.** Check `listen_to` and `allowed_chats` in the
 configuration, then set `log_level: debug` — every ignored command is logged
 with the reason.
+
+**A command or job fails with a one-letter error like `r`.** That is a minified
+error thrown inside WhatsApp Web, almost always from whatsapp-web.js building a
+full chat model — which for a group fetches its metadata and every participant,
+and breaks whenever WhatsApp ships a change to its web app. This add-on avoids
+that path, but if you hit it in a module you have written yourself: never call
+`msg.getChat()` or `client.getChats()`. Use `chatIdOf(msg)` from
+`src/whatsapp/chats.js` for the current chat, and `listGroups(client)` if you
+need names. Setting `gdrive.chat` to a chat **id** rather than a group name
+avoids the lookup entirely.

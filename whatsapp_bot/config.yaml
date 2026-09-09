@@ -1,6 +1,6 @@
 ---
 name: WhatsApp Bot
-version: "2.1.0"
+version: "2.1.1"
 slug: whatsapp_bot
 description: >-
   A modular WhatsApp bot (whatsapp-web.js) with a command registry,

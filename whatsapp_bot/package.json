@@ -1,6 +1,6 @@
 {
   "name": "whatsapp-bot",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Modular WhatsApp bot for Home Assistant",
   "private": true,
   "main": "src/index.js",
